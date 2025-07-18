@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>محادثة مباشرة</title>
+</head>
+<body>
+    <h2>📡 Live Chat</h2>
+    <div id="messages" style="height:200px; overflow-y:auto; border:1px solid gray; padding:10px;"></div>
+    <input id="msgInput" placeholder="اكتب رسالتك..." />
+    <button onclick="sendMessage()">إرسال</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const messagesDiv = document.getElementById("messages");
+        const msgInput = document.getElementById("msgInput");
+
+        function sendMessage() {
+            const msg = msgInput.value;
+            socket.emit("sendMessage", msg);
+            msgInput.value = "";
+        }
+
+        socket.on("newMessage", (msg) => {
+            const msgElement = document.createElement("div");
+            msgElement.textContent = msg;
+            messagesDiv.appendChild(msgElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+    </script>
+</body>
+</html>
